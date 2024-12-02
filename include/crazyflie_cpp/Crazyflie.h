@@ -776,8 +776,8 @@ public:
 
   void stop(uint8_t groupMask = 0);
 
-  // This is always in relative coordinates
-  void goTo(float x, float y, float z, float yaw, float duration, uint8_t groupMask = 0);
+  // using relative = false only makes sense for rare cases such as formation control
+  void goTo(float x, float y, float z, float yaw, float duration, bool relative = true, uint8_t groupMask = 0);
 
   // This is always in relative coordinates
   void startTrajectory(

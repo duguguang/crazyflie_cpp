@@ -1246,10 +1246,9 @@ void CrazyflieBroadcaster::stop(uint8_t groupMask)
   m_connection.send(req);
 }
 
-// This is always in relative coordinates
-void CrazyflieBroadcaster::goTo(float x, float y, float z, float yaw, float duration, uint8_t groupMask)
+void CrazyflieBroadcaster::goTo(float x, float y, float z, float yaw, float duration, bool relative, uint8_t groupMask)
 {
-  crtpCommanderHighLevelGoToRequest req(groupMask, true, x, y, z, yaw, duration);
+  crtpCommanderHighLevelGoToRequest req(groupMask, relative, x, y, z, yaw, duration);
   m_connection.send(req);
 }
 
