@@ -17,8 +17,9 @@
 
 #define FIRMWARE_BUGGY
 
-Logger EmptyLogger;
+using namespace flightmaster_cpp;
 
+Logger EmptyLogger;
 
 Crazyflie::Crazyflie(
   const std::string& link_uri,
@@ -205,22 +206,44 @@ void Crazyflie::notifySetpointsStop(uint32_t remainValidMillisecs)
   m_connection.send(req);
 }
 
-#if 0
+#if 1
 void Crazyflie::sendExternalPositionUpdate(
   float x,
   float y,
   float z)
 {
-  crtpExternalPositionUpdate position(x, y, z);
-  sendPacket(position);
+  crtpExternalPositionPacked req;
+
+  std::string hexStr =  m_connection.uri();
+  std::string lastTwoBytesStr = hexStr.substr(hexStr.length() - 2);
+
+  int16_t id{0};
+  std::stringstream ss;
+  ss << std::hex << lastTwoBytesStr;
+  ss >> id;
+
+  req.add(id, x * 1000, y * 1000, z* 1000);
+  m_connection.send(req);
 }
 
 void Crazyflie::sendExternalPoseUpdate(
   float x, float y, float z,
   float qx, float qy, float qz, float qw)
 {
-  crtpExternalPoseUpdate pose(x, y, z, qx, qy, qz, qw);
-  sendPacket(pose);
+  crtpExternalPosePacked req;
+
+  std::string hexStr =  m_connection.uri();
+  std::string lastTwoBytesStr = hexStr.substr(hexStr.length() - 2);
+
+  int16_t id{0};
+  std::stringstream ss;
+  ss << std::hex << lastTwoBytesStr;
+  ss >> id;
+
+  float q[4] = {qx, qy, qz, qw};
+  uint32_t quat = quatcompress(q);
+  req.add(id, x * 1000, y * 1000, z * 1000, quat);
+  m_connection.send(req);
 }
 #endif
 void Crazyflie::sendPing()

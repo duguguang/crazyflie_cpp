@@ -22,19 +22,7 @@
 #define PACK(__Declaration__) __pragma(pack(push, 1)) __Declaration__ __pragma(pack(pop))
 #endif
 
-class Logger
-{
-public:
-  Logger() {}
-  virtual ~Logger() {}
-
-  virtual void info(const std::string& /*msg*/) {}
-  virtual void warning(const std::string& /*msg*/) {}
-  virtual void error(const std::string& /*msg*/) {}
-};
-
-extern Logger EmptyLogger;
-
+#include "../../../include/Interface/logger/ILogger.h"
 class Crazyflie
 {
 public:
@@ -125,7 +113,7 @@ public:
 public:
   Crazyflie(
     const std::string& link_uri,
-    Logger& logger = EmptyLogger,
+    flightmaster_cpp::Logger& logger = flightmaster_cpp::EmptyLogger,
     std::function<void(const char*)> consoleCb = nullptr);
 
   static std::vector<std::string> scan(
@@ -474,7 +462,7 @@ private:
 
   int m_protocolVersion;
   // logging
-  Logger& m_logger;
+  flightmaster_cpp::Logger& m_logger;
 
   bitcraze::crazyflieLinkCpp::Connection m_connection;
 
@@ -482,7 +470,6 @@ private:
   std::chrono::time_point<std::chrono::steady_clock> m_clock_start;
   std::function<void(uint64_t)> m_latencyCallback;
   uint32_t m_latencyCounter;
-
 };
 
 template<class T>
