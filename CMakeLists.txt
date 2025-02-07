@@ -12,7 +12,7 @@ endif()
 
 option(BUILD_PYTHON_BINDINGS "" OFF)
 option(BUILD_CPP_EXAMPLES "" OFF)
-add_subdirectory(crazyflie-link-cpp EXCLUDE_FROM_ALL)
+add_subdirectory(crazyflie-link-cpp)
 
 add_library(crazyflie_cpp
   src/Crazyflie.cpp
@@ -29,6 +29,16 @@ target_include_directories(crazyflie_cpp
 target_link_libraries(crazyflie_cpp
   PRIVATE
     crazyflieLinkCpp
+)
+
+install(TARGETS crazyflie_cpp
+  EXPORT crazyflie_cpp-targets
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/crazyflie_cpp/
+  DESTINATION include/crazyflie_cpp
 )
 
 # include(CMakePackageConfigHelpers)
